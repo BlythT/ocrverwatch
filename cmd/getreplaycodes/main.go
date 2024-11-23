@@ -40,16 +40,14 @@ func main() {
 		log.Fatalf("Error: Could not check file status: %v\n", err)
 	}
 
-	// If file exists, print the file path
-	fmt.Printf("Image file path provided: %s\n", *filepath)
-	_, err = getReplayCodes(*filepath)
+	codes, err := getReplayCodes(*filepath)
 	if err != nil {
 		log.Fatalf("Error: Could not get codes for filepath %s: %v", *filepath, err)
 	}
 
-	// for _, code := range codes {
-	// 	fmt.Println(code)
-	// }
+	for _, code := range codes {
+		fmt.Println(code)
+	}
 }
 
 func getReplayCodes(imageFilePath string) (map[int]string, error) {
@@ -117,7 +115,6 @@ func getReplayCodes(imageFilePath string) (map[int]string, error) {
 			continue
 		}
 
-		fmt.Printf("%q: %q\n", croppedName, text)
 		orderedCodes[i] = text
 	}
 

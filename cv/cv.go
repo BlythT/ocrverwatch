@@ -53,7 +53,7 @@ func FindColouredRects(img gocv.Mat, targetColor color.RGBA, tolerance int) ([]i
 		rect := gocv.BoundingRect(contour)
 		boundingBoxes = append(boundingBoxes, rect)
 
-		gocv.Rectangle(&debugImg, rect, color.RGBA{0, 255, 0, 0}, 2) // Green rectangle
+		gocv.Rectangle(&debugImg, rect, color.RGBA{0, 255, 0, 0}, 6) // Green rectangle
 	}
 
 	// Save the debug image with the rectangles
