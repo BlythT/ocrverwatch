@@ -18,7 +18,6 @@ func TestGetReplayCodes(t *testing.T) {
 		{"assets/test/screenshot3.png", []string{"72JGBF", "7TSX7W", "FHXC4Y"}},
 		{"assets/test/photo1.png", []string{"2P1C4D", "1WJXEG", "WCXJQY", "Z3X710", "1PN311", "SRSRE3"}},
 		{"assets/test/photo2.jpg", []string{"YTVFW1", "OREOXM", "ZE299H", "CDE1AW", "38Y4CT", "4HN3NX", "HZX6BJ"}},
-
 	}
 
 	// Iterate over test cases

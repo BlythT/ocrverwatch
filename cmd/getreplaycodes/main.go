@@ -8,10 +8,10 @@ import (
 	"image/color"
 	"log"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
-	"path/filepath"
 
 	"github.com/BlythT/ocrverwatch/cv"
 	"github.com/BlythT/ocrverwatch/ocr"
@@ -21,7 +21,7 @@ import (
 func main() {
 	// Define a command-line flag for the image file path
 	filepath := flag.String("image", "", "Path to the image file")
-	
+
 	// Parse the flags
 	flag.Parse()
 
@@ -102,8 +102,9 @@ func getReplayCodes(imageFilePath string) (map[int]string, error) {
 		if err := cv.CropBoundingBox(img, box, croppedName); err != nil {
 			return nil, errors.Join(fmt.Errorf("cropping bounding boxes"), err)
 		}
-		
-		// By scraping https://owreplays.tv/ I was able to validate that the characters O, I, U, and L are excluded, likely due to similarity with others.
+
+		// By scraping https://owreplays.tv/ I was able to validate a character whitelist.
+		// O, I, U, and L are excluded, likely due to similarity with others..
 		text, err := ocr.ReadTextFromImg(croppedName, "ABCDEFGHJKMNPQRSTVWXYZ0123456789")
 		if err != nil {
 			return nil, errors.Join(fmt.Errorf("error: could not read text from image"), err)

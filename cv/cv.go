@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"path/filepath"
 
 	"gocv.io/x/gocv"
 )
@@ -48,7 +47,7 @@ func FindColouredRects(img gocv.Mat, targetColor color.RGBA, tolerance int) ([]i
 
 	// Draw rectangles around detected contours on the debug image
 	var boundingBoxes []image.Rectangle
-	for i := 0; i < contours.Size(); i++ {
+	for i := range contours.Size() {
 		contour := contours.At(i)
 		rect := gocv.BoundingRect(contour)
 		boundingBoxes = append(boundingBoxes, rect)
@@ -67,18 +66,17 @@ func FindColouredRects(img gocv.Mat, targetColor color.RGBA, tolerance int) ([]i
 func CropBoundingBox(img gocv.Mat, boundingBox image.Rectangle, outputName string) error {
 	croppedImg := img.Region(boundingBox)
 	if ok := gocv.IMWrite(outputName, croppedImg); !ok {
-		return fmt.Errorf("error: could not write cropped image to %q", filepath.Join(outputName))
+		return fmt.Errorf("error: could not write cropped image to %q", outputName)
 	}
 
 	return nil
 }
 
-
 // OptimiseForTextClarity pre-processes the image to give the best environment for OCR.
 func OptimiseForTextClarity(img gocv.Mat) {
 	// Convert to grayscale
 	gocv.CvtColor(img, &img, gocv.ColorBGRToGray)
-	
+
 	// Apply Gaussian Blur to smooth out noise
 	gocv.GaussianBlur(img, &img, image.Pt(15, 15), 0, 0, gocv.BorderDefault)
 
@@ -96,19 +94,3 @@ func dilateMask(mask gocv.Mat) gocv.Mat {
 	gocv.Dilate(mask, &mask, kernel)
 	return mask
 }
-
-// Utility functions for clamping values
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-

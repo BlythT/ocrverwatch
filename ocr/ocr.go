@@ -14,7 +14,7 @@ func ReadTextFromImg(filepath string, whitelist string) (string, error) {
 		return "", fmt.Errorf("setting image %q, %w", filepath, err)
 	}
 	client.Languages = []string{"eng"}
-	
+
 	if err := client.SetWhitelist(whitelist); err != nil {
 		return "", fmt.Errorf("setting whitelist %q, %w", whitelist, err)
 	}
