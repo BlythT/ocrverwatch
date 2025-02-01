@@ -18,6 +18,14 @@ import (
 	"gocv.io/x/gocv"
 )
 
+// replayCodeOrange was eye-droppered from the orange boxes that hold overwatch Replay codes.
+var replayCodeOrange = color.RGBA{
+	R: 241,
+	G: 100,
+	B: 18,
+	A: 255,
+}
+
 func main() {
 	// Define a command-line flag for the image file path
 	filepath := flag.String("image", "", "Path to the image file")
@@ -50,6 +58,7 @@ func main() {
 	}
 }
 
+// getReplayCodes by detecting orange boxes, cropping them, pre-processing, and OCRing each one to get the text within.
 func getReplayCodes(imageFilePath string) (map[int]string, error) {
 	// Read the input image
 	img := gocv.IMRead(imageFilePath, gocv.IMReadColor)
@@ -66,12 +75,7 @@ func getReplayCodes(imageFilePath string) (map[int]string, error) {
 	// resize
 	gocv.Resize(img, &img, image.Point{X: newWidth, Y: newHeight}, 0, 0, gocv.InterpolationLinear)
 
-	boundingBoxes, err := cv.FindColouredRects(img, color.RGBA{
-		R: 241,
-		G: 100,
-		B: 18,
-		A: 255,
-	}, 50)
+	boundingBoxes, err := cv.FindColouredRects(img, replayCodeOrange, 50)
 	if err != nil {
 		return nil, errors.Join(fmt.Errorf("finding coloured rects"), err)
 	}
@@ -122,6 +126,7 @@ func getReplayCodes(imageFilePath string) (map[int]string, error) {
 	return orderedCodes, nil
 }
 
+// orderByHighestPoint returns the image.Rectangles in a map with indexes starting at 0 to preserve order.
 func orderByHighestPoint(rects []image.Rectangle) map[int]image.Rectangle {
 	sort.Slice(rects, func(i, j int) bool {
 		return rects[i].Min.Y < rects[j].Min.Y
@@ -135,10 +140,11 @@ func orderByHighestPoint(rects []image.Rectangle) map[int]image.Rectangle {
 	return orderedRects
 }
 
+// cropReplayCode performs a crop specialized to the replay code box.
 func cropReplayCode(rect image.Rectangle) image.Rectangle {
 	width := rect.Dx()
-	cropLeftAmount := float64(width) / 4.5
-	cropRightAmount := width / 20
+	cropLeftAmount := float64(width) / 4.5 // The replay code has a share symbol on the left that takes up ~1/4-1/5th.
+	cropRightAmount := width / 20          // The bounding box often leaves whitespace
 
 	croppedBox := image.Rect(rect.Min.X+int(cropLeftAmount), rect.Min.Y, rect.Max.X-cropRightAmount, rect.Max.Y)
 	return croppedBox

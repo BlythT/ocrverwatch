@@ -55,11 +55,3 @@ https://github.com/hybridgroup/gocv?tab=readme-ov-file#ubuntulinux
 As of writing, some dependencies in the makefile are outdated for Ubuntu 24.04 (libtbb2 and libfreetype6-dev) and it will fail to install. Remove them from `DEBS` and `make install` again.
 
 Proper install from zero guide coming soon.
-
-# TODO
-- [ ] Train tesseract on exact font for better OCR results https://github.com/afnleaf/ow2-replaycode-ocr/pull/1#issuecomment-2505553741
-- [ ] Discord bot integration
-- [ ] Proper depedency install instructions, either via Makefile or better README.md
-
-# Potential future work
-- [ ] Website integration?
